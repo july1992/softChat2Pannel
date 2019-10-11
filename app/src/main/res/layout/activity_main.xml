@@ -37,6 +37,7 @@
                 </android.support.v7.widget.RecyclerView>
 
                 <LinearLayout
+                    android:id="@+id/lly_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -73,19 +74,15 @@
     <LinearLayout
         android:id="@+id/lly_content"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
         android:orientation="horizontal"
         android:visibility="visible"
         android:background="#FF0000">
 
-        <Button
+        <TextView
+            android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxx"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="ssss"/>
+            android:text="emotion"/>
     </LinearLayout>
 </LinearLayout>

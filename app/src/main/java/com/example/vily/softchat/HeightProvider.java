@@ -74,4 +74,8 @@ public class HeightProvider extends PopupWindow implements OnGlobalLayoutListene
     public interface HeightListener {
         void onHeightChanged(int height);
     }
+
+    public void setSoftMode(int type){
+        setSoftInputMode(type);
+    }
 }
