@@ -88,7 +88,7 @@ public class TestActivity extends AppCompatActivity {
                 mInputHeight = mEt_input.getHeight();
                 mLly_content.setY(mRoot.getHeight() -mLly_input.getHeight());
 
-                Log.i(TAG, "run: ----mInputHeight:"+mInputHeight);
+                Log.i(TAG, "run: ----mInputHeight:"+mInputHeight+"----："+mEt_input.getBottom());
 
             }
         });
@@ -238,7 +238,7 @@ public class TestActivity extends AppCompatActivity {
         mEt_input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
+                Log.i(TAG, "onEditorAction: -----mInputHeight:"+mInputHeight+"--:"+mEt_input.getBottom());
                 if (actionId == EditorInfo.IME_ACTION_SEND
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
@@ -248,7 +248,7 @@ public class TestActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Log.i(TAG, "onEditorAction: -----mInputHeight:"+mInputHeight+"--:"+mEt_input.getHeight());
-                            Log.i(TAG, "onEditorAction: -----mInputHeight:"+dpToPx(14));
+
                         }
                     });
 
