@@ -2,6 +2,7 @@ package com.example.vily.softchat;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,12 +13,14 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -55,6 +58,7 @@ public class TestHomeActivity extends AppCompatActivity {
     private Button mBtn_send;
     private View mView_fill;
     private LinearLayout mLly_toolbar;
+    private FrameLayout mFll_all;
 
 
     @Override
@@ -77,6 +81,7 @@ public class TestHomeActivity extends AppCompatActivity {
         mBtn_send = findViewById(R.id.btn_send);
         mView_fill = findViewById(R.id.view_fill);
         mLly_toolbar = findViewById(R.id.lly_toolbar);
+        mFll_all = findViewById(R.id.fll_all);
 
 
         initData();
@@ -113,6 +118,26 @@ public class TestHomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mTestAdapter.addData("ssss:"+mTestAdapter.getItemCount());
                 mRv_recycle.smoothScrollToPosition(mTestAdapter.getItemCount()-1);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int space=0;
+                        int fillSpace=mRoot.getHeight()-mLly_input.getHeight()-mLly_toolbar.getHeight();
+                        if(isSoftOpen){
+                            space=mRoot.getHeight()-mLly_input.getHeight()-mSoftHeight-mLly_toolbar.getHeight();
+                        }else{
+                            if(isPannelOpen){
+                                space=mView_fill.getHeight()-mLly_toolbar.getHeight();
+                            }
+                        }
+                        if(space>0 && mLly_all.getHeight()>space && mLly_all.getHeight()<fillSpace){
+                            int move=space-mLly_all.getHeight();
+                            mLly_all.setY(move);
+                        }
+                    }
+                }, 100);
+
+
             }
         });
         mRv_recycle.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -218,6 +243,10 @@ public class TestHomeActivity extends AppCompatActivity {
                                 mLly_all.clearAnimation();
                                 mLly_all.setY(0);
 
+                                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mFll_all.getLayoutParams();
+                                layoutParams.bottomMargin=mLly_input.getHeight();
+                                mFll_all.setLayoutParams(layoutParams);
+                                mRv_recycle.smoothScrollToPosition(mTestAdapter.getItemCount()-1);
                             }
 
 
@@ -268,35 +297,21 @@ public class TestHomeActivity extends AppCompatActivity {
         });
 
 
-
-        mEt_input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEt_input.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.i(TAG, "onEditorAction: -----mInputHeight:"+mInputHeight+"--:"+mEt_input.getBottom());
-                if (actionId == EditorInfo.IME_ACTION_SEND
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
-                    //处理事件
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Log.i(TAG, "onLayoutChange: ----input："+top+"---:"+oldTop+"----:"+bottom+"----:"+oldBottom);
+                TranslateAnimation animationAll = null;
+                int space=mRoot.getHeight()-mLly_toolbar.getHeight()-mSoftHeight-mLly_input.getHeight();
+                int moveAll=0;
+                if( oldBottom>0 && mLly_all.getHeight()>space ){
+                    moveAll= oldBottom-bottom;
+                    mLly_all.setY(mLly_all.getY()+ moveAll);
 
-                    TranslateAnimation animationAll = null;
-                    int space=mView_fill.getHeight()-mLly_toolbar.getHeight();
-                    int moveAll=0;
-                    if(mLly_all.getHeight()>space){
-                        moveAll= (int) (space-mLly_all.getHeight()+mLly_all.getY());
-                    }
-                    Log.i(TAG, "switchPannel: ----moveAll:"+moveAll);
-                    animationAll= initAnimation(300, moveAll);
-                    mLly_all.startAnimation(animationAll);
-                    animationAll.setAnimationListener(new SimpleAnimationListener(){
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-
-                        }
-                    });
                 }
 
-                return false;
 
+                Log.i(TAG, "switchPannel: ----moveAll:"+moveAll);
             }
         });
 
@@ -312,52 +327,65 @@ public class TestHomeActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    otheClose = true;
-                    mEt_input.clearFocus();
 
-                    TranslateAnimation animation =initAnimation(300,mLly_pannel.getHeight());
-                    TranslateAnimation animationAll =initAnimation(300,-mLly_all.getY());
-                    if (isPannelOpen) {
-                        if (isSoftOpen) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(mEt_input.getWindowToken(), 0);
-                        }
+                    closePannelSoft();
 
-                        Log.i(TAG, "onTouch: -----:内容开始下降");
-                        mLly_content.startAnimation(animation);
-                        mLly_all.startAnimation(animationAll);
-
-                        animation.setAnimationListener(new SimpleAnimationListener(){
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                super.onAnimationEnd(animation);
-                                mLly_content.clearAnimation();
-                                mLly_content.setY(mLly_pannel.getHeight());
-                                isPannelOpen = false;
-                            }
-                        });
-                        animationAll.setAnimationListener(new SimpleAnimationListener(){
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                super.onAnimationEnd(animation);
-                                mLly_all.clearAnimation();
-                                mLly_all.setY(0);
-                            }
-                        });
-                    } else {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(mEt_input.getWindowToken(), 0);
-                    }
-
-
-                    isSoftOpen = false;
-                    mBtn_emoji.setSelected(false);
-                    mBtn_more.setSelected(false);
                 }
                 return false;
             }
         });
 
+    }
+
+    private void closePannelSoft() {
+        otheClose = true;
+        mEt_input.clearFocus();
+
+
+        TranslateAnimation animation =initAnimation(300,mLly_pannel.getHeight());
+        TranslateAnimation animationAll =initAnimation(300,-mLly_all.getY());
+        if (isPannelOpen) {
+            if (isSoftOpen) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEt_input.getWindowToken(), 0);
+            }
+
+            Log.i(TAG, "onTouch: -----:内容开始下降");
+            mLly_content.startAnimation(animation);
+            mLly_all.startAnimation(animationAll);
+
+            animation.setAnimationListener(new SimpleAnimationListener(){
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    super.onAnimationEnd(animation);
+                    mLly_content.clearAnimation();
+                    mLly_content.setY(mRoot.getHeight()-mLly_input.getHeight()-mView_fill.getHeight());
+                    isPannelOpen = false;
+
+                }
+            });
+            animationAll.setAnimationListener(new SimpleAnimationListener(){
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    super.onAnimationEnd(animation);
+                    mLly_all.clearAnimation();
+                    mLly_all.setY(0);
+                    Log.i(TAG, "onAnimationEnd: -----:"+mLly_input.getHeight());
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mFll_all.getLayoutParams();
+                    layoutParams.bottomMargin=mLly_input.getHeight();
+                    mFll_all.setLayoutParams(layoutParams);
+                    mRv_recycle.smoothScrollToPosition(mTestAdapter.getItemCount()-1);
+                }
+            });
+        } else {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEt_input.getWindowToken(), 0);
+        }
+
+
+        isSoftOpen = false;
+        mBtn_emoji.setSelected(false);
+        mBtn_more.setSelected(false);
     }
 
     private void switchPannel(View view) {

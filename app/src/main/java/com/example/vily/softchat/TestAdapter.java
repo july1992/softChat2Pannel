@@ -18,4 +18,8 @@ public class TestAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
 
         helper.setText(R.id.tv_content,item);
     }
+
+    public void getViewHeihgtByPosition(int itemCount) {
+
+    }
 }

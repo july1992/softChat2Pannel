@@ -30,9 +30,10 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fll_all"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
+
             android:background="@color/colorPrimary">
 
 
@@ -40,6 +41,7 @@
                 android:id="@+id/lly_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:background="#ffffff"
                 android:orientation="vertical">
 
@@ -93,6 +95,7 @@
                 android:layout_weight="1"
                 android:text="Hello World!"
                 android:textSize="14dp"
+                android:maxLines="5"
 
                 />
 
