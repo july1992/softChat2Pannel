@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lly_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="hahaahahahha" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            android:background="@color/colorPrimary">
+
+
+            <LinearLayout
+                android:id="@+id/lly_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
+
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+
+        android:id="@+id/lly_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view_fill"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#77fff000"/>
+        <LinearLayout
+            android:id="@+id/lly_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="#c3c3c3"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/et_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hello World!"
+                android:textSize="14dp"
+
+                />
+
+            <ImageView
+                android:id="@+id/btn_emoji"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/selector_chat_emotion"
+                android:text="表情" />
+
+            <ImageView
+                android:id="@+id/btn_more"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/selector_chat_more"
+                android:text="+" />
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="send"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lly_pannel"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="#FF0000">
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:text="emotion" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

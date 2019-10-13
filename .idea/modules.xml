@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/softchat-master.iml" filepath="$PROJECT_DIR$/softchat-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/softChat2Pannel.iml" filepath="$PROJECT_DIR$/softChat2Pannel.iml" />
     </modules>
   </component>
 </project>
